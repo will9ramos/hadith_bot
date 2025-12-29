@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Участники - Админ-панель бота{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1><i class="fas fa-users-cog"></i> Управление участниками</h1>
+        <hr>
+    </div>
+</div>
+
+{% if request.query_params.new_user %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <h4 class="alert-heading"><i class="fas fa-check-circle"></i> Участник создан!</h4>
+    <p>Новый участник успешно создан. Сохраните эти учетные данные:</p>
+    <hr>
+    <p class="mb-0">
+        <strong>Логин:</strong> <code>{{ request.query_params.new_user }}</code><br>
+        <strong>Пароль:</strong> <code>{{ request.query_params.new_pass }}</code>
+    </p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <form method="post" action="/participants/create" onsubmit="return confirm('Создать нового участника? Логин и пароль будут сгенерированы автоматически.');">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Создать участника
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-list"></i> Список участников</h5>
+            </div>
+            <div class="card-body">
+                {% if participants %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Имя пользователя</th>
+                                <th>Роль</th>
+                                <th>Создан</th>
+                                <th>Создал</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for participant in participants %}
+                            <tr>
+                                <td>{{ participant.id }}</td>
+                                <td><code>{{ participant.username }}</code></td>
+                                <td>
+                                    {% if participant.role == 'participant' %}
+                                    <span class="badge bg-info">Участник</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ participant.role }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if participant.created_at %}
+                                    {{ participant.created_at|int }}
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                </td>
+                                <td>{{ participant.created_by or 'Система' }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#credentialsModal{{ participant.id }}">
+                                        <i class="fas fa-eye"></i> Учетные данные
+                                    </button>
+                                    <form method="post" action="/participants/delete/{{ participant.id }}" style="display: inline;" 
+                                          onsubmit="return confirm('Вы уверены, что хотите удалить этого участника?');">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i> Удалить
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Нет участников. Создайте первого участника, нажав кнопку выше.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="alert alert-info">
+            <h5><i class="fas fa-info-circle"></i> Информация</h5>
+            <ul class="mb-0">
+                <li>Участники имеют права только на добавление хадисов</li>
+                <li>Все хадисы, добавленные участниками, попадают в раздел "Предложенные хадисы"</li>
+                <li>Главный администратор должен одобрить или отклонить предложенные хадисы</li>
+                <li>Логин и пароль генерируются автоматически при создании участника</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Модальные окна для учетных данных (вынесены за пределы таблицы) -->
+{% if participants %}
+    {% for participant in participants %}
+    <div class="modal fade" id="credentialsModal{{ participant.id }}" tabindex="-1" aria-labelledby="credentialsModalLabel{{ participant.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="credentialsModalLabel{{ participant.id }}">Учетные данные участника</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Логин:</strong> <code>{{ participant.username }}</code></p>
+                    <p><strong>Пароль:</strong> <code>{{ participant.password }}</code></p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i> Сохраните эти данные в безопасном месте!
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

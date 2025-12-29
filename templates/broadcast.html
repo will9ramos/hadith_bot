@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Рассылка сообщений - Админ-панель бота{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1><i class="fas fa-bullhorn"></i> Рассылка сообщений</h1>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" action="/broadcast_v2" enctype="multipart/form-data" id="broadcastForm">
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Текст сообщения (подпись к медиа)</label>
+                        <div class="btn-toolbar mb-2" role="toolbar">
+                            <div class="btn-group me-2 mb-1" role="group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertHtmlTag('message', 'b')" title="Жирный"><b>B</b></button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertHtmlTag('message', 'i')" title="Курсив"><i>I</i></button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertHtmlTag('message', 'u')" title="Подчеркнутый"><u>U</u></button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertHtmlTag('message', 's')" title="Зачеркнутый"><s>S</s></button>
+                            </div>
+                            <div class="btn-group me-2 mb-1" role="group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertHtmlTag('message', 'a')" title="Ссылка"><i class="fas fa-link"></i></button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertHtmlTag('message', 'code')" title="Код (строка)"><i class="fas fa-code"></i></button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertHtmlTag('message', 'spoiler')" title="Скрытый текст (спойлер)"><i class="fas fa-eye-slash"></i></button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="insertHtmlTag('message', 'blockquote')" title="Цитата"><i class="fas fa-quote-right"></i></button>
+                            </div>
+                        </div>
+                        <textarea class="form-control" id="message" name="message" rows="8" required></textarea>
+                        <div class="form-text">Введите текст сообщения. Используйте HTML для форматирования.</div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>Выберите один из способов отправки медиа (или оставьте пустым для текстовой рассылки):</strong>
+                    </div>
+
+                    <div class="mb-3 border p-3 rounded">
+                        <label for="files" class="form-label"><strong>Способ 1:</strong> Загрузить файлы (фото/видео, до 50 МБ)</label>
+                        <input class="form-control" type="file" id="files" name="files" multiple onchange="checkFileLimit(this)">
+                        <div class="form-text text-danger" id="fileLimitError" style="display: none;">
+                            <i class="fas fa-exclamation-circle"></i> Максимум 10 файлов для одного альбома!
+                        </div>
+                    </div>
+
+                    <p class="text-center my-3"><strong>ИЛИ</strong></p>
+
+                    <div class="mb-3 border p-3 rounded">
+                        <label for="file_id" class="form-label"><strong>Способ 2:</strong> Вставить File ID</label>
+                        <div class="input-group">
+                            <input class="form-control" type="text" id="file_id" name="file_id" placeholder="Вставьте сюда ID фото или видео...">
+                            <select class="form-select" name="file_type" id="file_type" style="max-width: 150px;">
+                                <option value="photo">Фото</option>
+                                <option value="video" selected>Видео</option>
+                                <option value="document">Документ</option>
+                                <option value="audio">Аудио</option>
+                            </select>
+                        </div>
+                        <div class="form-text">Чтобы получить ID, отправьте медиа боту, а затем перешлите его сообщение в @JsonDumpBot.</div>
+                    </div>
+                    
+                    <div class="mb-3 mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-paper-plane"></i> Отправить всем
+                        </button>
+                        <a href="/" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Назад
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> Инструкция</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>Напишите текст сообщения.</li>
+                    <li>Если хотите отправить медиа, <strong>выберите только один способ:</strong> либо загрузите файл(ы), либо вставьте File ID.</li>
+                    <li><strong>Лимит:</strong> Максимум 10 файлов (для создания альбома).</li>
+                    <li>Если вы вставите File ID, <strong>не забудьте выбрать правильный тип медиа</strong> (Фото, Видео и т.д.).</li>
+                    <li>Если вы не выберете медиа, будет отправлено только текстовое сообщение.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function checkFileLimit(input) {
+    const errorDiv = document.getElementById('fileLimitError');
+    if (input.files.length > 10) {
+        errorDiv.style.display = 'block';
+        input.value = ''; // Очистить выбор
+        alert("Telegram позволяет отправлять максимум 10 файлов в одном альбоме. Пожалуйста, выберите меньше файлов.");
+    } else {
+        errorDiv.style.display = 'none';
+    }
+}
+
+document.getElementById('broadcastForm').addEventListener('submit', function(event) {
+    const filesInput = document.getElementById('files');
+    const fileIdInput = document.getElementById('file_id');
+    
+    if (filesInput.files.length > 0 && fileIdInput.value.trim() !== "") {
+        event.preventDefault();
+        alert("Пожалуйста, выберите ТОЛЬКО ОДИН способ отправки медиа: либо файлы, либо File ID.");
+    }
+});
+</script>
+{% endblock %}

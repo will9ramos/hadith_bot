@@ -1,0 +1,14 @@
+# --- START OF FILE requirements.txt ---
+
+aiogram[redis]
+asyncpg
+fastapi
+uvicorn[standard]
+jinja2
+python-multipart
+humanize
+aiofiles
+itsdangerous
+starlette
+
+# --- END OF FILE requirements.txt ---

@@ -1,0 +1,94 @@
+import os
+from pathlib import Path
+
+# --- Основные настройки бота ---
+TOKEN = "ваш токен"  # ВАШ ТЕЛЕГРАМ ТОКЕН
+ADMIN_ID = 1234567890  # ВАШ TELEGRAM ID
+AUDIO_GROUP_ID = -1001234567890  # ID группы для хранения аудиофайлов
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = 6379
+
+
+# --- Настройки подключения к базе данных (SUPABASE) ---
+# ВАЖНО: Используйте данные "Transaction Mode" (порт 6543) для лучшей совместимости
+DB_CONFIG = {
+    'user': 'юзернейм',   # ВАШ ПОЛЬЗОВАТЕЛЬ ИЗ SUPABASE
+    'password': 'пароль',              # ПАРОЛЬ, КОТОРЫЙ ВЫ ЗАДАЛИ ПРИ СОЗДАНИИ ПРОЕКТА
+    'database': 'название базы',                    # Имя базы данных (обычно postgres)
+    'host': 'хост', # ВАШ ХОСТ (Transaction pooler)
+    'port': 6543                               # Порт пулера (рекомендуется)
+}
+
+# --- Настройки веб-панели (админки) ---
+WEB_USERNAME = "логин"
+WEB_PASSWORD = "пароль"
+SECRET_KEY = "supersecretkey_change_in_production_12345"  # Для сессий
+PER_PAGE = 30 # Количество записей на одной странице в админке
+
+# --- Настройки директорий ---
+UPLOAD_DIR = Path("uploads")
+
+# --- В файле config.py ---
+BOOKS = {
+    'bukhari': {
+        'ru': 'Сахих аль-Бухари', 
+        'en': 'Sahih al-Bukhari', 
+        'ar': 'صحيح البخاري',
+        'tr': 'Sahih-i Buhari',
+        'fr': 'Sahih al-Bukhari',
+        'bn': 'সহীহ আল-বুখারী',
+        'id': 'Sahih al-Bukhari',
+        'ta': 'ஸஹீஹ் அல்-புஹாரி' 
+    },
+    'muslim': {
+        'ru': 'Сахих Муслим', 
+        'en': 'Sahih Muslim', 
+        'ar': 'صحيح مسلم',
+        'tr': 'Sahih-i Müslim',
+        'fr': 'Sahih Muslim',
+        'bn': 'সহীহ মুসলিম',
+        'id': 'Sahih Muslim',
+        'ta': 'ஸஹீஹ் முஸ்லிம்'
+    },
+    'abudawud': {
+        'ru': 'Сунан Абу Дауд', 
+        'en': 'Sunan Abu Dawud', 
+        'ar': 'سنن أبي داود',
+        'tr': 'Sünen-i Ebu Davud',
+        'fr': 'Sunan Abu Dawud',
+        'bn': 'সুনান আবু দাউদ',
+        'id': 'Sunan Abu Daud',
+        'ta': 'ஸுனன் அபூ தாவூத்'
+    },
+    'tirmidhi': {
+        'ru': 'Сунан ат-Тирмизи', 
+        'en': 'Sunan at-Tirmidhi', 
+        'ar': 'جامع الترمذي',
+        'tr': 'Sünen-i Tirmizi',
+        'fr': 'Jami at-Tirmidhi',
+        'bn': 'জামে আত-তিরমিযী',
+        'id': 'Jami\' at-Tirmidzi',
+        'ta': 'ஜாமிஅத் திர்மிதி'
+    },
+    'nasai': {
+        'ru': 'Сунан ан-Насаи', 
+        'en': 'Sunan an-Nasa’i', 
+        'ar': 'سنن النسائي',
+        'tr': 'Sünen-i Nesai',
+        'fr': 'Sunan an-Nasa\'i',
+        'bn': 'সুনান আন-নাসায়ী',
+        'id': 'Sunan an-Nasa\'i',
+        'ta': 'ஸுனன் அந்-நஸாயீ'
+    },
+    'ibnmajah': {
+        'ru': 'Сунан Ибн Маджа', 
+        'en': 'Sunan Ibn Majah', 
+        'ar': 'سنن ابن ماجه',
+        'tr': 'Sünen-i İbn Mace',
+        'fr': 'Sunan Ibn Majah',
+        'bn': 'সুনান ইবনে মাজাহ',
+        'id': 'Sunan Ibnu Majah',
+        'ta': 'ஸுனன் இப்னு மாஜா'
+    }
+}
+

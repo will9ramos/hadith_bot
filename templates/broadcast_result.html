@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Результат рассылки - Админ-панель бота{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1><i class="fas fa-bullhorn"></i> Рассылка</h1>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body text-center">
+                
+                <!-- Этот блок показывается, если рассылка была запущена в фоне -->
+                {% if background %}
+                <div class="text-success">
+                    <i class="fas fa-check-circle fa-3x mb-3"></i>
+                    <h3>Рассылка запущена в фоновом режиме!</h3>
+                    <p class="lead">Сообщения будут доставлены всем активным пользователям в течение нескольких минут.</p>
+                    <p class="text-muted">Вы можете закрыть эту страницу, процесс продолжится на сервере. Информацию о ходе рассылки можно найти в логах бота.</p>
+                </div>
+
+                <!-- Этот блок показывается, если рассылка была мгновенной (старый вариант, на всякий случай) -->
+                {% else %}
+                    {% if successful > 0 %}
+                    <div class="text-success">
+                        <i class="fas fa-check-circle fa-3x mb-3"></i>
+                        <h3>Рассылка успешно отправлена!</h3>
+                    </div>
+                    {% else %}
+                    <div class="text-warning">
+                        <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                        <h3>Рассылка отправлена с ошибками</h3>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h5><i class="fas fa-check"></i> Успешно отправлено</h5>
+                                    <p class="display-4">{{ successful }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body">
+                                    <h5><i class="fas fa-times"></i> Ошибок</h5>
+                                    <p class="display-4">{{ failed }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <div class="mt-4">
+                    <a href="/broadcast" class="btn btn-primary">
+                        <i class="fas fa-redo"></i> Отправить еще одну
+                    </a>
+                    <a href="/" class="btn btn-secondary">
+                        <i class="fas fa-home"></i> Вернуться на главную
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

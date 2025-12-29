@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Резервное копирование - Админ-панель бота{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1><i class="fas fa-database"></i> Резервное копирование и восстановление</h1>
+        <hr>
+    </div>
+</div>
+
+<!-- Сообщения об успехе или ошибке -->
+{% if success %}
+<div class="alert alert-success" role="alert">
+    <h4 class="alert-heading">Успешно!</h4>
+    <p>{{ success }}</p>
+    <hr>
+    <p class="mb-0">Чтобы перезапустить бота на сервере, используйте команду <code>systemctl restart hadithbot</code>.</p>
+</div>
+{% endif %}
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Ошибка!</h4>
+    <p>{{ error }}</p>
+</div>
+{% endif %}
+
+<div class="row mt-4">
+    <!-- Секция Экспорта -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-file-export"></i> Экспорт данных</h5>
+            </div>
+            <div class="card-body">
+                <p>Нажмите на кнопку ниже, чтобы создать и скачать полную резервную копию базы данных.</p>
+                <p>Файл будет содержать всех пользователей, хадисы, прогресс и настройки.</p>
+                <a href="/backup/export" class="btn btn-primary">
+                    <i class="fas fa-download"></i> Скачать резервную копию
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Секция Импорта -->
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5><i class="fas fa-file-import"></i> Восстановление из файла</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <strong>ВНИМАНИЕ!</strong> Эта операция <strong>ПОЛНОСТЬЮ УДАЛИТ</strong> все текущие данные в базе и заменит их данными из файла. Это действие необратимо.
+                </div>
+                <form action="/backup/import" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="backup_file" class="form-label">Выберите файл (<code>.dump</code>)</label>
+                        <input class="form-control" type="file" id="backup_file" name="backup_file" accept=".dump" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Вы уверены, что хотите восстановить данные из этого файла? Все текущие данные будут стерты!')">
+                        <i class="fas fa-upload"></i> Восстановить данные
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> Инструкция по миграции на новый сервер</h5>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>На старом сервере нажмите <strong>"Скачать резервную копию"</strong> и сохраните <code>.dump</code> файл.</li>
+                    <li>Настройте бота на новом сервере, установите все зависимости и PostgreSQL.</li>
+                    <li>Запустите бота на новом сервере, войдите в админ-панель.</li>
+                    <li>Перейдите на эту страницу, в секции "Восстановление" выберите скачанный <code>.dump</code> файл и нажмите "Восстановить".</li>
+                    <li><strong>Обязательно перезапустите процесс бота</strong> на сервере (например, командой <code>systemctl restart hadithbot</code>), чтобы он загрузил восстановленные данные в память.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}```

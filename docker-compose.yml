@@ -1,0 +1,24 @@
+services:
+  bot:
+    build: .
+    container_name: hadith_bot
+    restart: always
+    environment:
+      - REDIS_HOST=redis
+      - TZ=Asia/Tashkent
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    volumes:
+      - ./uploads:/app/uploads
+      - ./static:/app/static
+      - ./templates:/app/templates
+  redis:
+    image: redis:alpine
+    container_name: hadith_redis
+    restart: always
+    volumes:
+      - redis_data:/data
+volumes:
+  redis_data:

@@ -1,0 +1,94 @@
+<!-- --- START OF FILE templates/base.html --- -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Админ-панель бота{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js для графиков -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Sidebar Overlay для мобильных -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-kaaba"></i> Hadith Bot
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="/" class="{{ 'active' if request.url.path == '/' else '' }}"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+            <li><a href="/hadiths" class="{{ 'active' if 'hadiths' in request.url.path and 'no-audio' not in request.url.path else '' }}"><i class="fas fa-book"></i> Хадисы</a></li>
+            
+            {% if admin and admin.role == 'main_admin' %}
+            <li class="sidebar-heading">Медиа и Контент</li>
+            <li><a href="/hadiths-no-audio" class="{{ 'active' if 'no-audio' in request.url.path else '' }}"><i class="fas fa-microphone-alt-slash"></i> Без аудио</a></li>
+            <li>
+                <a href="/pending-hadiths" class="{{ 'active' if 'pending' in request.url.path else '' }}">
+                    <i class="fas fa-clock"></i> Предложенные
+                    {% if stats and stats.pending_hadiths > 0 %}
+                    <span class="badge bg-warning text-dark ms-auto">{{ stats.pending_hadiths }}</span>
+                    {% endif %}
+                </a>
+            </li>
+
+            <li class="sidebar-heading">Пользователи</li>
+            <li><a href="/users" class="{{ 'active' if 'users' in request.url.path else '' }}"><i class="fas fa-users"></i> База пользователей</a></li>
+            <li><a href="/participants" class="{{ 'active' if 'participants' in request.url.path else '' }}"><i class="fas fa-user-shield"></i> Администраторы</a></li>
+
+            <li class="sidebar-heading">Система</li>
+            <li><a href="/broadcast" class="{{ 'active' if 'broadcast' in request.url.path else '' }}"><i class="fas fa-bullhorn"></i> Рассылка</a></li>
+            <li><a href="/backup" class="{{ 'active' if 'backup' in request.url.path else '' }}"><i class="fas fa-database"></i> Резервные копии</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="mt-auto p-3">
+            <a href="/logout" class="btn btn-outline-light w-100"><i class="fas fa-sign-out-alt"></i> Выход</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar (Mobile toggle) -->
+        <div class="d-flex justify-content-between align-items-center d-lg-none mb-4">
+            <button class="btn btn-primary" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+            <span class="fw-bold">Панель управления</span>
+        </div>
+
+        {% block content %}{% endblock %}
+        
+        <footer class="text-center text-muted mt-5 pt-3 border-top">
+            <small>&copy; 2024 Hadith Bot Admin Panel. v2.0 Dashboard Edition</small>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script>
+        // Мобильное меню
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const toggle = document.getElementById('sidebarToggle');
+
+        if(toggle) {
+            toggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+        }
+        if(overlay) {
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+    </script>
+</body>
+</html>
+<!-- --- END OF FILE templates/base.html --- -->

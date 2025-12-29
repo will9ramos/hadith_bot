@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика пользователя - Админ-панель{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>
+            <i class="fas fa-chart-bar"></i> 
+            Статистика пользователя: 
+            <strong>{{ user.first_name or user.username or user.user_id }}</strong>
+        </h1>
+        <p class="text-muted">
+            ID: <code>{{ user.user_id }}</code> | 
+            Зарегистрирован: {{ user.registered_at_str }} ({{ user.registered_at_human }}) | 
+            Язык: <span class="badge bg-info">{{ user.language.upper() }}</span>
+        </p>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Прогресс изучения (язык: {{ user.language.upper() }})</h5>
+            </div>
+            <div class="card-body">
+                {% if user_stats %}
+                    <div class="list-group">
+                    {% for stat in user_stats %}
+                        {% if stat.total > 0 %}  <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ stat.book_name }}</h5>
+                                <small><strong>{{ stat.studied }} / {{ stat.total }}</strong></small>
+                            </div>
+                            <div class="progress mt-2" style="height: 20px;">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: {{ stat.percentage }}%;" 
+                                     aria-valuenow="{{ stat.percentage }}" 
+                                     aria-valuemin="0" aria-valuemax="100">
+                                     {{ "%.1f"|format(stat.percentage|float) }}%
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-info-circle fa-2x text-muted mb-2"></i>
+                        <p class="mb-0">У этого пользователя нет прогресса изучения на выбранном языке.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <a href="/users" class="btn btn-secondary mt-3">
+            <i class="fas fa-arrow-left"></i> Назад к списку пользователей
+        </a>
+    </div>
+</div>
+{% endblock %}

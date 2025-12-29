@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Отправить сообщение - Админ-панель бота{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1><i class="fas fa-paper-plane"></i> Отправить сообщение</h1>
+        <hr>
+        <h5>Кому: <strong>{{ user.first_name }}</strong> (ID: <code>{{ user.user_id }}</code>)</h5>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" action="/users/message/{{ user.user_id }}">
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Текст сообщения</label>
+                        <textarea class="form-control" id="message" name="message" rows="8" required></textarea>
+                        <div class="form-text">Поддерживается Markdown для форматирования.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Отправить
+                        </button>
+                        <a href="/users" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Назад к списку
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

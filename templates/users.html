@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Список пользователей - Админ-панель бота{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1><i class="fas fa-users"></i> Список пользователей</h1>
+        <hr>
+    </div>
+</div>
+
+<div id="alert-placeholder"></div>
+
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <form method="get" action="/users" class="d-flex flex-grow-1">
+                <input class="form-control me-2" type="search" placeholder="Поиск по ID, имени или юзернейму..." name="q" value="{{ search_query }}">
+                <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i> Найти</button>
+                <a href="/users" class="btn btn-outline-secondary ms-2" title="Сбросить поиск"><i class="fas fa-times"></i></a>
+            </form>
+            <form method="post" action="/users/scan" class="ms-3" id="scan-form">
+                 <button type="submit" class="btn btn-info" title="Запустить проверку пользователей, которые заблокировали бота. Это может занять несколько минут.">
+                    <i class="fas fa-sync-alt"></i> Сканировать заблокированных
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                {% if users %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Имя (First Name)</th>
+                                <th>Username</th>
+                                <th>Дата регистрации</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>
+                                    <a href="/users/stats/{{ user.user_id }}" title="Посмотреть статистику">{{ user.user_id }}</a>
+                                </td>
+                                <td>{{ user.first_name if user.first_name else '<span class="text-muted">Нет</span>' | safe }}</td>
+                                <td>
+                                    {% if user.username %}
+                                        <a href="https://t.me/{{ user.username }}" target="_blank">@{{ user.username }}</a>
+                                    {% else %}
+                                        <span class="text-muted">Нет</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.registered_at_str }}</td>
+                                <td>
+                                    {% if user.blocked %}
+                                        <span class="badge bg-danger">Заблокировал</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Активен</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="/users/stats/{{ user.user_id }}" class="btn btn-sm btn-outline-secondary" title="Статистика">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </a>
+                                    <a href="/users/message/{{ user.user_id }}" class="btn btn-sm btn-info" title="Написать сообщение">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                    <h4>Пользователи не найдены</h4>
+                    <p class="text-muted">По вашему запросу ничего не найдено, либо в боте еще нет пользователей.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Скрипт для отображения уведомления о запуске сканирования
+document.getElementById('scan-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Отменяем стандартную отправку формы
+    
+    // Показываем уведомление
+    const alertPlaceholder = document.getElementById('alert-placeholder');
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = [
+        '<div class="alert alert-success alert-dismissible fade show" role="alert">',
+        '   <i class="fas fa-check-circle"></i> Сканирование заблокированных пользователей запущено в фоновом режиме. Обновите страницу через несколько минут, чтобы увидеть результат.',
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+    ].join('');
+    alertPlaceholder.append(wrapper);
+
+    // Отправляем запрос на сервер
+    fetch(this.action, {
+        method: this.method,
+        body: new FormData(this)
+    }).catch(error => console.error('Ошибка при запуске сканирования:', error));
+    
+    // Делаем кнопку неактивной, чтобы избежать повторных нажатий
+    this.querySelector('button').disabled = true;
+});
+</script>
+{% endblock %}

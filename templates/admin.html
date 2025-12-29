@@ -1,0 +1,132 @@
+<!-- --- START OF FILE templates/admin.html --- -->
+{% extends "base.html" %}
+
+{% block title %}Дашборд - Админ-панель{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-tachometer-alt text-primary"></i> Обзор системы</h2>
+    <div class="text-muted">{{ now }}</div>
+</div>
+
+<div class="row">
+    {% if admin and admin.role == 'main_admin' %}
+    <!-- Статистика для главного админа -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card stats-card bg-gradient-primary">
+            <div class="card-body">
+                <h6 class="text-uppercase opacity-75">Всего пользователей</h6>
+                <h2 class="mb-0">{{ stats.total_users }}</h2>
+                <i class="fas fa-users fa-2x position-absolute bottom-0 end-0 m-3 opacity-25"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card stats-card bg-gradient-success">
+            <div class="card-body">
+                <h6 class="text-uppercase opacity-75">Всего хадисов</h6>
+                <h2 class="mb-0">{{ stats.total_hadiths }}</h2>
+                <i class="fas fa-book fa-2x position-absolute bottom-0 end-0 m-3 opacity-25"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card stats-card bg-gradient-info">
+            <div class="card-body">
+                <h6 class="text-uppercase opacity-75">Активные (изучают)</h6>
+                <h2 class="mb-0">{{ stats.active_users }}</h2>
+                <i class="fas fa-chart-line fa-2x position-absolute bottom-0 end-0 m-3 opacity-25"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card stats-card bg-gradient-danger">
+            <div class="card-body">
+                <h6 class="text-uppercase opacity-75">Заблокировали</h6>
+                <h2 class="mb-0">{{ stats.blocked_users }}</h2>
+                <i class="fas fa-ban fa-2x position-absolute bottom-0 end-0 m-3 opacity-25"></i>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Для участников -->
+    <div class="col-md-12">
+        <div class="card stats-card bg-gradient-success">
+            <div class="card-body text-center py-5">
+                <h3 class="text-uppercase">Всего хадисов в базе</h3>
+                <h1 class="display-1 fw-bold">{{ stats.total_hadiths }}</h1>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% if admin and admin.role == 'main_admin' %}
+<div class="row mt-2">
+    <!-- График пользователей -->
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-chart-pie"></i> Соотношение пользователей</span>
+            </div>
+            <div class="card-body">
+                <canvas id="usersChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Быстрые действия -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <span><i class="fas fa-bolt"></i> Быстрые действия</span>
+            </div>
+            <div class="card-body d-grid gap-3">
+                <a href="/hadiths/add" class="btn btn-outline-primary d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-plus-circle me-2"></i> Добавить хадис</span>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                <a href="/broadcast" class="btn btn-outline-success d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-paper-plane me-2"></i> Сделать рассылку</span>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                <a href="/hadiths-no-audio" class="btn btn-outline-warning d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-microphone me-2"></i> Загрузить аудио</span>
+                    {% if stats.total_hadiths > 0 %} <!-- Примерная логика -->
+                    <span class="badge bg-warning text-dark">!</span>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Скрипт для графика -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('usersChart').getContext('2d');
+    const activeUsers = {{ stats.total_users }} - {{ stats.blocked_users }};
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Активные', 'Заблокировали'],
+            datasets: [{
+                data: [activeUsers, {{ stats.blocked_users }}],
+                backgroundColor: ['#2E7D32', '#C62828'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}
+<!-- --- END OF FILE templates/admin.html --- -->

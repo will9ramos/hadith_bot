@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Предложенные хадисы - Админ-панель бота{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1><i class="fas fa-clock"></i> Предложенные хадисы</h1>
+        <hr>
+    </div>
+</div>
+
+{% if request.query_params.success == 'approved' %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="fas fa-check-circle"></i> Хадис успешно одобрен и добавлен в базу!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+{% if request.query_params.success == 'rejected' %}
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <i class="fas fa-times-circle"></i> Хадис отклонен.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+        {% if pending_hadiths %}
+        {% for hadith in pending_hadiths %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <strong>{{ hadith.book_name }}</strong> | 
+                        <span class="badge bg-secondary">{{ hadith.language }}</span> | 
+                        Отправил: <code>{{ hadith.submitted_by }}</code>
+                    </div>
+                    <div class="col-auto">
+                        <small class="text-muted">
+                            {% if hadith.submitted_at %}
+                            {{ hadith.submitted_at|int }}
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="card-text" style="white-space: pre-wrap;">{{ hadith.text }}</p>
+                <div class="btn-group" role="group">
+                    <a href="/pending-hadiths/edit/{{ hadith.id }}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Редактировать и одобрить
+                    </a>
+                    <form method="post" action="/pending-hadiths/approve/{{ hadith.id }}" style="display: inline;"
+                          onsubmit="return confirm('Одобрить этот хадис без изменений?');">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Одобрить как есть
+                        </button>
+                    </form>
+                    <form method="post" action="/pending-hadiths/reject/{{ hadith.id }}" style="display: inline;"
+                          onsubmit="return confirm('Отклонить этот хадис?');">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-times"></i> Отклонить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Нет ожидающих рассмотрения хадисов.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="alert alert-info">
+            <h5><i class="fas fa-info-circle"></i> Информация</h5>
+            <ul class="mb-0">
+                <li><strong>Редактировать и одобрить:</strong> откроет страницу редактирования, где вы можете исправить текст перед одобрением</li>
+                <li><strong>Одобрить как есть:</strong> хадис будет добавлен в базу без изменений</li>
+                <li><strong>Отклонить:</strong> хадис не будет добавлен в базу</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

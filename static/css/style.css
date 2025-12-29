@@ -1,0 +1,189 @@
+/* --- START OF FILE static/css/style.css --- */
+:root {
+    --primary-color: #5D4037; /* Темно-коричневый */
+    --secondary-color: #D7CCC8; /* Светло-коричневый */
+    --accent-color: #FFB300; /* Золотой */
+    --bg-color: #F4F6F9; /* Светлый фон */
+    --text-dark: #2C3E50;
+    --sidebar-width: 260px;
+    --card-radius: 12px;
+    --transition-speed: 0.3s;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    height: 100vh;
+    width: var(--sidebar-width);
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: linear-gradient(180deg, #4E342E 0%, #3E2723 100%);
+    color: #fff;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    transition: var(--transition-speed);
+    overflow-y: auto;
+}
+
+.sidebar-brand {
+    padding: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-menu {
+    padding: 1rem 0;
+    list-style: none;
+    margin: 0;
+}
+
+.sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    transition: var(--transition-speed);
+    border-left: 4px solid transparent;
+    font-weight: 500;
+}
+
+.sidebar-menu li a:hover, .sidebar-menu li a.active {
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    border-left-color: var(--accent-color);
+}
+
+.sidebar-menu li a i {
+    width: 30px;
+    font-size: 1.1rem;
+}
+
+.sidebar-heading {
+    padding: 15px 25px 5px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* --- MAIN CONTENT --- */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
+    transition: var(--transition-speed);
+}
+
+/* --- CARDS --- */
+.card {
+    border: none;
+    border-radius: var(--card-radius);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    background: #fff;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 1.2rem 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+}
+
+/* --- STATS CARDS --- */
+.stats-card {
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+}
+
+.stats-card .card-body {
+    z-index: 2;
+    position: relative;
+}
+
+.stats-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.bg-gradient-primary { background: linear-gradient(45deg, #5D4037, #795548); }
+.bg-gradient-success { background: linear-gradient(45deg, #2E7D32, #43A047); }
+.bg-gradient-info { background: linear-gradient(45deg, #0277BD, #0288D1); }
+.bg-gradient-danger { background: linear-gradient(45deg, #C62828, #E53935); }
+
+/* --- TABLES --- */
+.table thead th {
+    background-color: #fafafa;
+    color: #666;
+    font-weight: 600;
+    border-bottom: 2px solid #eee;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+/* --- BUTTONS --- */
+.btn {
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #4E342E;
+    border-color: #4E342E;
+}
+
+/* --- BADGES --- */
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 992px) {
+    .sidebar { margin-left: calc(-1 * var(--sidebar-width)); }
+    .sidebar.active { margin-left: 0; }
+    .main-content { margin-left: 0; }
+    .sidebar-overlay {
+        display: none;
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5); z-index: 999;
+    }
+    .sidebar-overlay.active { display: block; }
+}
+/* --- END OF FILE static/css/style.css --- */
